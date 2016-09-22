@@ -39,3 +39,17 @@ Example Configuration json file:
   ]
 }
 ```
+
+### Dynamic records
+You have to create an entry in the `dyn_records` array for each DNS record you want to update dynamically. Each of these entries may contain the following attributes:
+
+`name` to specify the subdomain.
+
+`type` to specify the domain record type that is to be updated.  
+If not present, both the A and the AAAA records will be updated, unless `data` is set, in which case `type` will default to `TXT`.
+
+`data` can be used to format the data before sending it to DigitalOcean.  
+Optional for A and AAAA records.  
+You can use `%v4` to insert the IPv4 address and `%v6` for the IPv6 address respectively. Use `%%` to insert a literal %.
+
+`device` is used as an identifier to determine wheter this or another device is supposed to handle dynamic IP updates.
