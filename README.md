@@ -53,3 +53,6 @@ Optional for A and AAAA records.
 You can use `%v4` to insert the IPv4 address and `%v6` for the IPv6 address respectively. Use `%%` to insert a literal %.
 
 `device` is used as an identifier to determine wheter a device is supposed to handle dynamic IP updates for this record.
+
+## Handling multiple devices
+You can use the device property of dynamic records to specify the name of the device, which is supposed to handle dns updates for this record.
