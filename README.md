@@ -52,4 +52,4 @@ If not present, both the A and the AAAA records will be updated, unless `data` i
 Optional for A and AAAA records.  
 You can use `%v4` to insert the IPv4 address and `%v6` for the IPv6 address respectively. Use `%%` to insert a literal %.
 
-`device` is used as an identifier to determine wheter this or another device is supposed to handle dynamic IP updates.
+`device` is used as an identifier to determine wheter a device is supposed to handle dynamic IP updates for this record.
