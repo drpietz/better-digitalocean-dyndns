@@ -50,9 +50,14 @@ class DnsRecord:
         }
 
     def matches_record(self, record: dict):
-        return record['type'] == self.dns_type and \
-               record['name'] == self.subdomain and \
-               self.value_matches_format(record['data'], self.data_format)
+        type_matches = record['type'] == self.dns_type
+        subdomain_matches = record['name'] == self.subdomain
+        format_matches = self.value_matches_format(record['data'], self.data_format)
+
+        if self.dns_type in ['A', 'AAAA']:
+            return type_matches and subdomain_matches
+        else:
+            return type_matches and subdomain_matches and format_matches
 
     def set_base_record(self, record: dict):
         self.id = record['id']
