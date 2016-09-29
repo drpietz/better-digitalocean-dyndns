@@ -1,7 +1,12 @@
+from urllib.request import urljoin
+import requests
 import re
 
 
 class DnsRecord:
+    API_BASE_URL = 'https://api.digitalocean.com/'
+
+
     def __init__(self, bearer, domain, subdomain, dns_type, data_format):
         self.bearer = bearer
         self.domain = domain
@@ -10,6 +15,39 @@ class DnsRecord:
         self.data_format = data_format
         self.current_value = None
         self.id = None
+
+    def refresh(self, ipv4: str, ipv6: str):
+        new_value = self.string_replace(self.data_format, ipv4=ipv4, ipv6=ipv6)
+
+        if not new_value == self.current_value:
+            self.push(new_value)
+
+    def push(self, value: str):
+        self.current_value = value
+
+        if self.id is None:
+            self.create_record()
+        else:
+            self.update_record()
+
+    def create_record(self):
+        url = format('/v2/domains/{domain}/records', domain=self.domain)
+        absolute_url = urljoin(DnsRecord.API_BASE_URL, url)
+
+        return requests.post(absolute_url, self.get_request_data())
+
+    def update_record(self):
+        url = format('/v2/domains/{domain}/records/{id}', domain=self.domain, id=self.id)
+        absolute_url = urljoin(DnsRecord.API_BASE_URL, url)
+
+        return requests.put(absolute_url, self.get_request_data())
+
+    def get_request_data(self):
+        return {
+            'type': self.dns_type,
+            'name': self.subdomain,
+            'data': self.current_value
+        }
 
     def matches_record(self, record: dict):
         return record['type'] == self.dns_type and \
