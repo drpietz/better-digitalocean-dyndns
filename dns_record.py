@@ -9,6 +9,16 @@ class DnsRecord:
         self.dns_type = dns_type
         self.data_format = data_format
         self.current_value = None
+        self.id = None
+
+    def matches_record(self, record: dict):
+        return record['type'] == self.dns_type and \
+               record['name'] == self.subdomain and \
+               self.value_matches_format(record['data'], self.data_format)
+
+    def set_base_record(self, record: dict):
+        self.id = record['id']
+        self.current_value = record['data']
 
     @staticmethod
     def string_replace(string: str, ipv4: str, ipv6: str):
