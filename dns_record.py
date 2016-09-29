@@ -30,3 +30,24 @@ class DnsRecord:
                         string = string[len(key):]
 
         return result
+
+    @staticmethod
+    def generate_format(string: str, replace_literals=True):
+        if replace_literals:
+            replacements = [(r'%', '%%')]
+        else:
+            replacements = []
+
+        replacements += [(r"(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)", '%v4'),
+                         (r"(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}", '%v6')]
+
+        for regex, token in replacements:
+            string = re.sub(regex, token, string)
+
+        return string
+
+    # WARNING: False positives.
+    # Example: "1.2.3.4, 5.6.7.8" matches "%v4 %v4"
+    @staticmethod
+    def value_matches_format(value: str, data_format: str):
+        return DnsRecord.generate_format(data_format, replace_literals=False) == DnsRecord.generate_format(value)
