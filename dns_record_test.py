@@ -11,7 +11,8 @@ def get_test_record():
     return DnsRecord('b7d03a6947b217efb6f3ec3bd3504582',
                      'example.com',
                      'www',
-                     'A')
+                     'A',
+                     '%v4')
 
 
 def get_matching_api_record():
