@@ -6,21 +6,12 @@ import re
 class DnsRecord:
     API_BASE_URL = 'https://api.digitalocean.com/'
 
-    def __init__(self, bearer, domain, subdomain, dns_type, data_format=None):
+    def __init__(self, bearer, domain, subdomain, dns_type, data_format):
         self.bearer = bearer
         self.domain = domain
         self.subdomain = subdomain
         self.dns_type = dns_type
-
-        if data_format is not None:
-            self.data_format = data_format
-        else:
-            if dns_type == 'A':
-                self.data_format = '%v4'
-            elif dns_type == 'AAAA':
-                self.data_format = '%v6'
-            else:
-                raise Exception('Data format must be supplied for type ' + dns_type)
+        self.data_format = data_format
 
         self.current_value = None
         self.id = None
@@ -113,3 +104,36 @@ class DnsRecord:
     @staticmethod
     def value_matches_format(value: str, data_format: str):
         return DnsRecord.generate_format(data_format, replace_literals=False) == DnsRecord.generate_format(value)
+
+
+class DnsRecordFactory:
+    def __init__(self):
+        self.bearer = None
+        self.domain = None
+        self.records = []
+
+    def get_all_records(self):
+        return self.records
+
+    def set_bearer(self, bearer):
+        self.bearer = bearer
+
+    def set_domain(self, domain):
+        self.domain = domain
+
+    def create_records(self, subdomain, dns_type=None, data_format=None):
+        if data_format is not None:
+            if dns_type is not None:
+                self.records.append(DnsRecord(self.bearer, self.domain, subdomain, dns_type, data_format))
+            else:
+                self.create_records(subdomain, dns_type='TXT', data_format=data_format)
+        else:
+            if dns_type is None:
+                self.create_records(subdomain, dns_type='A')
+                self.create_records(subdomain, dns_type='AAAA')
+            elif dns_type == 'A':
+                self.create_records(subdomain, dns_type=dns_type, data_format='%v4')
+            elif dns_type == 'AAAA':
+                self.create_records(subdomain, dns_type=dns_type, data_format='%v6')
+            else:
+                raise Exception('Format must be set for type ' + dns_type)
