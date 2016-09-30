@@ -3,13 +3,20 @@ import requests
 import socket
 from dns_record import DnsRecordFactory
 import api
+from daemonize import Daemonize
+import os
+from time import sleep
 
 
 def main():
-    hostname = socket.gethostname()
-    records = get_records_from_config(hostname)
-    fetch_current_data(records)
-    update_records(records)
+    while True:
+        hostname = socket.gethostname()
+
+        records = get_records_from_config(hostname)
+        fetch_current_data(records)
+        update_records(records)
+
+        sleep(5 * 60)
 
 
 def update_records(records):
@@ -57,4 +64,5 @@ def get_records_from_config(hostname):
 
 
 if __name__ == '__main__':
-    main()
+    daemon = Daemonize(app='dodns', pid=os.getpid(), action=main)
+    daemon.start()
