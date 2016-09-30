@@ -6,13 +6,22 @@ import re
 class DnsRecord:
     API_BASE_URL = 'https://api.digitalocean.com/'
 
-
-    def __init__(self, bearer, domain, subdomain, dns_type, data_format):
+    def __init__(self, bearer, domain, subdomain, dns_type, data_format=None):
         self.bearer = bearer
         self.domain = domain
         self.subdomain = subdomain
         self.dns_type = dns_type
-        self.data_format = data_format
+
+        if data_format is not None:
+            self.data_format = data_format
+        else:
+            if dns_type == 'A':
+                self.data_format = '%v4'
+            elif dns_type == 'AAAA':
+                self.data_format = '%v6'
+            else:
+                raise Exception('Data format must be supplied for type ' + dns_type)
+
         self.current_value = None
         self.id = None
 
