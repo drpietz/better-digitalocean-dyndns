@@ -1,6 +1,15 @@
 # better-digitalocean-dyndns
 Fully automated and customizable python script for using DigitalOcean as a DynDNS service.
 
+## Usage
+1. Install daemonize by running
+```
+pip install daemonize
+```
+2. Download repository
+3. Customize config.ini and config.json
+4. Run dodns.py with Python 3
+
 ## Configuration
 Example config.json file:
 ```
