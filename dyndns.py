@@ -6,17 +6,19 @@ import api
 from daemonize import Daemonize
 import os
 from time import sleep
+from configparser import ConfigParser
 
 
 def main():
     while True:
-        hostname = socket.gethostname()
+        hostname = get_hostname()
+        interval = get_interval()
 
         records = get_records_from_config(hostname)
         fetch_current_data(records)
         update_records(records)
 
-        sleep(5 * 60)
+        sleep(interval)
 
 
 def update_records(records):
@@ -61,6 +63,27 @@ def get_records_from_config(hostname):
                     factory.create_records(record['name'], record.get('type'), record.get('data'))
 
     return factory.get_all_records()
+
+
+def get_hostname():
+    return get_config_value('Hostname', socket.gethostname())
+
+
+def get_interval():
+    return int(get_config_value('Interval', 5 * 60))
+
+
+def get_config_value(name, default=None):
+    if not os.path.isfile('config.ini'):
+        return default
+
+    config = ConfigParser()
+    config.read('config.ini')
+
+    if 'Dodns' in config and name in config['Dodns']:
+        return config['Dodns'][name]
+    else:
+        return default
 
 
 if __name__ == '__main__':
