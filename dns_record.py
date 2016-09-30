@@ -104,7 +104,7 @@ class DnsRecord:
                          (r"(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}", '%v6')]
 
         for regex, token in replacements:
-            string = re.sub(regex, token, string)
+            string = re.sub(regex, token, string, flags=re.IGNORECASE)
 
         return string
 
