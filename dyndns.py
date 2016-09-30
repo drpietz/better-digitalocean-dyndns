@@ -1,4 +1,5 @@
 import json
+import requests
 import socket
 from dns_record import DnsRecordFactory
 import api
@@ -8,6 +9,15 @@ def main():
     hostname = socket.gethostname()
     records = get_records_from_config(hostname)
     fetch_current_data(records)
+    update_records(records)
+
+
+def update_records(records):
+    ipv4 = requests.get('http://ipv4bot.whatismyipaddress.com/').text
+    ipv6 = requests.get('http://ipv6bot.whatismyipaddress.com/').text
+
+    for record in records:
+        record.refresh(ipv4, ipv6)
 
 
 def fetch_current_data(records):
