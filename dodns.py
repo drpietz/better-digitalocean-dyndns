@@ -3,22 +3,16 @@ import requests
 import socket
 from dns_record import DnsRecordFactory
 import api
-from daemonize import Daemonize
 import os
-from time import sleep
 from configparser import ConfigParser
 
 
 def main():
-    while True:
-        hostname = get_hostname()
-        interval = get_interval()
+    hostname = get_hostname()
 
-        records = get_records_from_config(hostname)
-        fetch_current_data(records)
-        update_records(records)
-
-        sleep(interval)
+    records = get_records_from_config(hostname)
+    fetch_current_data(records)
+    update_records(records)
 
 
 def update_records(records):
@@ -69,10 +63,6 @@ def get_hostname():
     return get_config_value('Hostname', socket.gethostname())
 
 
-def get_interval():
-    return int(get_config_value('Interval', 5 * 60))
-
-
 def get_config_value(name, default=None):
     if not os.path.isfile('config.ini'):
         return default
@@ -87,5 +77,4 @@ def get_config_value(name, default=None):
 
 
 if __name__ == '__main__':
-    daemon = Daemonize(app='dodns', pid=os.getpid(), action=main)
-    daemon.start()
+    main()

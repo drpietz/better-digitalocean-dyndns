@@ -1,5 +1,5 @@
 # better-digitalocean-dyndns
-Fully automated and customizable python script for using DigitalOcean as a DynDNS service.
+Fully customizable python script for using DigitalOcean as a DynDNS service.
 
 ## Usage
 1. Install required packages by running
@@ -8,6 +8,8 @@ pip install -r requirements.txt
 ```
 2. Customize config.ini and config.json
 3. Run dodns.py with Python 3
+
+It is recommended to set up a cronjob to run the script periodically (e.g. every 5 Minutes)
 
 ## Configuration
 Example config.json file:
@@ -52,7 +54,6 @@ Example config.ini file:
 ```
 [Dodns]
 Hostname=raspi
-Interval=300
 ```
 
 ### Dynamic records
