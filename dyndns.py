@@ -57,7 +57,7 @@ def get_records_from_config(hostname):
             factory.set_domain(domain['name'])
 
             for record in domain['dyn_records']:
-                if 'device' not in record or record['device'] == hostname:
+                if 'host' not in record or record['host'] == hostname:
                     factory.create_records(record['name'], record.get('type'), record.get('data'))
 
     return factory.get_all_records()

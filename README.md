@@ -15,11 +15,11 @@ Example Configuration json file:
             {
               "name": "sub1",
               "type": "A",
-              "device": "raspi"
+              "host": "raspi"
             },
             {
               "name": "sub2",
-              "device": "raspi"
+              "host": "raspi"
             }
           ]
         },
@@ -30,7 +30,7 @@ Example Configuration json file:
               "name": "@",
               "type": "TXT",
               "data": "current ip: %4",
-              "device": "raspi"
+              "host": "raspi"
             }
           ]
         }
@@ -52,8 +52,8 @@ If not present, both the A and the AAAA records will be updated, unless `data` i
 Optional for A and AAAA records.  
 You can use `%v4` to insert the IPv4 address and `%v6` for the IPv6 address respectively. Use `%%` to insert a literal %.
 
-`device` is used as an identifier to determine wheter a device is supposed to handle dynamic IP updates for this record.
-If not present, any device will update the record.
+`host` is used as an identifier to determine whether a host is supposed to handle dynamic IP updates for this record.
+If not present, any host will update the record.
 
-## Handling multiple devices
-You can use the device property of dynamic records to specify the name of the device, which is supposed to handle dns updates for this record.
+## Handling multiple hosts
+You can use the host property of dynamic records to specify the name of the host, which is supposed to handle dns updates for this record.
