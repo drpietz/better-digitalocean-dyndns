@@ -1,0 +1,34 @@
+{
+  "bearers": [
+    {
+      "key": "b7d03a6947b217efb6f3ec3bd3504582",
+      "domains": [
+        {
+          "name": "example.com",
+          "dyn_records": [
+            {
+              "name": "www",
+              "host": "raspi"
+            },
+            {
+              "name": "cloud",
+              "type": "A",
+              "host": "nas"
+            }
+          ]
+        },
+        {
+          "name": "me.io",
+          "dyn_records": [
+            {
+              "name": "@",
+              "type": "TXT",
+              "data": "current ip: %4",
+              "host": "raspi"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
