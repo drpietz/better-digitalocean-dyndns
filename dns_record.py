@@ -1,11 +1,8 @@
-from urllib.request import urljoin
-import requests
 import re
+import api
 
 
 class DnsRecord:
-    API_BASE_URL = 'https://api.digitalocean.com/'
-
     def __init__(self, bearer, domain, subdomain, dns_type, data_format):
         self.bearer = bearer
         self.domain = domain
@@ -26,21 +23,9 @@ class DnsRecord:
         self.current_value = value
 
         if self.id is None:
-            self.create_record()
+            api.create_domain_record(self.bearer, self.domain, self.get_request_data())
         else:
-            self.update_record()
-
-    def create_record(self):
-        url = format('/v2/domains/{domain}/records', domain=self.domain)
-        absolute_url = urljoin(DnsRecord.API_BASE_URL, url)
-
-        return requests.post(absolute_url, self.get_request_data())
-
-    def update_record(self):
-        url = format('/v2/domains/{domain}/records/{id}', domain=self.domain, id=self.id)
-        absolute_url = urljoin(DnsRecord.API_BASE_URL, url)
-
-        return requests.put(absolute_url, self.get_request_data())
+            api.update_domain_record(self.bearer, self.domain, self.id, self.get_request_data())
 
     def get_request_data(self):
         return {
@@ -99,8 +84,6 @@ class DnsRecord:
 
         return string
 
-    # WARNING: False positives.
-    # Example: "1.2.3.4, 5.6.7.8" matches "%v4 %v4"
     @staticmethod
     def value_matches_format(value: str, data_format: str):
         return DnsRecord.generate_format(data_format, replace_literals=False) == DnsRecord.generate_format(value)
