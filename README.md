@@ -22,13 +22,13 @@ Example config.json file:
           "name": "example.com",
           "dyn_records": [
             {
-              "name": "sub1",
-              "type": "A",
+              "name": "www",
               "host": "raspi"
             },
             {
-              "name": "sub2",
-              "host": "raspi"
+              "name": "cloud",
+              "type": "A",
+              "host": "nas"
             }
           ]
         },
@@ -44,7 +44,7 @@ Example config.json file:
           ]
         }
       ]
-    },
+    }
   ]
 }
 ```
