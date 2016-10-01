@@ -43,7 +43,7 @@ def fetch_current_data(records):
 def get_records_from_config(hostname):
     factory = DnsRecordFactory()
 
-    with open('config.json') as json_data:
+    with open(get_relative_file('config.json')) as json_data:
         config = json.load(json_data)
 
     for bearer in config['bearers']:
@@ -64,7 +64,7 @@ def get_hostname():
 
 
 def get_config_value(name, default=None):
-    if not os.path.isfile('config.ini'):
+    if not os.path.isfile(get_relative_file('config.ini')):
         return default
 
     config = ConfigParser()
@@ -74,6 +74,10 @@ def get_config_value(name, default=None):
         return config['Dodns'][name]
     else:
         return default
+
+
+def get_relative_file(file):
+    return os.path.join(os.path.dirname(__file__), file)
 
 
 if __name__ == '__main__':
