@@ -16,8 +16,8 @@ def main():
 
 
 def update_records(records):
-    ipv4 = requests.get('http://ipv4bot.whatismyipaddress.com/').text
-    ipv6 = requests.get('http://ipv6bot.whatismyipaddress.com/').text
+    ipv4 = get_current_ipv4_address()
+    ipv6 = get_current_ipv6_address()
 
     for record in records:
         record.refresh(ipv4, ipv6)
@@ -78,6 +78,49 @@ def get_config_value(name, default=None):
 
 def get_relative_file(file):
     return os.path.join(os.path.dirname(__file__), file)
+
+
+def get_current_ipv4_address():
+    ipv4 = get_page_content('http://ipv4bot.whatismyipaddress.com/')
+    if is_valid_ipv4_address(ipv4):
+        return ipv4
+    else:
+        raise ValueError('Returned value is not a valid IPv4 address', ipv4)
+
+
+def get_current_ipv6_address():
+    ipv6 = get_page_content('http://ipv6bot.whatismyipaddress.com/')
+    if is_valid_ipv6_address(ipv6):
+        return ipv6
+    else:
+        raise ValueError('Returned value is not a valid IPv6 address', ipv6)
+
+
+def get_page_content(url):
+    return requests.get(url).text
+
+
+def is_valid_ipv4_address(address):
+    try:
+        socket.inet_pton(socket.AF_INET, address)
+    except AttributeError:  # no inet_pton here, sorry
+        try:
+            socket.inet_aton(address)
+        except socket.error:
+            return False
+        return address.count('.') == 3
+    except socket.error:  # not a valid address
+        return False
+
+    return True
+
+
+def is_valid_ipv6_address(address):
+    try:
+        socket.inet_pton(socket.AF_INET6, address)
+    except socket.error:  # not a valid address
+        return False
+    return True
 
 
 if __name__ == '__main__':
